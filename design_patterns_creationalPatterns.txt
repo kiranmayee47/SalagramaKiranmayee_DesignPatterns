@@ -1,0 +1,60 @@
+import java.util.Scanner;
+
+interface Notification {                               //factory pattern
+    void notifyUser(); 
+}
+ class SMSNotification implements Notification {   
+	    public void notifyUser() 
+	    { 
+	        System.out.println("Sending an SMS notification"); 
+	    } 
+	} 
+ class EmailNotification implements Notification { 
+
+	    public void notifyUser() 
+	    { 
+	        System.out.println("Sending an e-mail notification"); 
+	    } 
+	} 
+ class NotificationFactory {      
+     private static  NotificationFactory notificationFactory ;  //Singleton pattern
+     
+     private NotificationFactory() 
+     { 
+    	 
+     } 
+     public static  NotificationFactory getInstance(){ 
+    	 if (notificationFactory == null)  
+    	    { 
+    		 notificationFactory = new NotificationFactory(); 
+    	    } 
+         return notificationFactory; 
+     }
+	    public  Notification createNotification(String channel) 
+	    { 
+
+	        if ("SMS".equals(channel)) { 
+	             return new SMSNotification(); 
+	        } 
+	        else if ("EMAIL".equals(channel)) { 
+	             return new EmailNotification(); 
+	        } 
+	        return null;
+	    } 
+	} 
+public class design_patterns_creationalPatterns {
+	public static void main(String[] args) 
+	{
+		try{
+			System.out.println("Enter the type of Sending Notification 1) SMS  2) EMAIL");
+			Scanner sc=new Scanner(System.in);
+			String input=sc.next();
+            NotificationFactory.getInstance().createNotification(input).notifyUser();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("Invalid input");
+		}
+	}
+
+}

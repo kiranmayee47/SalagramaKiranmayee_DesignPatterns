@@ -1,0 +1,173 @@
+import java.util.*; 
+interface Employee                                 //composition pattern
+{ 
+    
+	public void showEmployeeDetails(); 
+	public void AddID(long id); 
+	
+}
+
+ class Developer implements Employee 
+ { 
+	static  List<Long> eml=new ArrayList<Long>();
+     private String name; 
+     private long empId; 
+     private String position;
+     public Developer(long empId, String name, String position) 
+     { 
+         this.empId = empId; 
+         this.name = name; 
+         this.position=position;
+         AddID(empId);
+     } 
+       
+     public void showEmployeeDetails()  
+     { 
+         System.out.println(empId+" "+name+" "+position); 
+     }
+
+	@Override
+	public void AddID(long empId2) {
+		// TODO Auto-generated method stub
+		eml.add(empId2);
+		
+	} 
+ } 
+  class Manager implements Employee 
+ { 
+     private  String name; 
+     private long empId;
+     private String position;
+   
+         public Manager(long empId, String name, String position) 
+     { 
+         this.empId = empId; 
+         this.name = name;
+         this.position=position;
+         AddID(empId);
+     } 
+         public void AddID(long id) {
+     		
+     		
+			Developer.eml.add(id);
+     	}
+     @Override
+     public void showEmployeeDetails()  
+     { 
+         System.out.println(empId+" " +name+" "+position); 
+     }
+	
+ }
+  class CompanyDirectory implements Employee 
+  { 
+      private List<Employee> employeeList = new ArrayList<Employee>(); 
+    
+      public  List<Employee> EMPlist()
+      {
+    	  return employeeList;
+      }
+      @Override
+      public void showEmployeeDetails()  
+      { 
+          for(Employee emp:employeeList) 
+          { 
+              emp.showEmployeeDetails(); 
+          } 
+      } 
+         
+      public void addEmployee(Employee emp) 
+      { 
+          employeeList.add(emp);
+      } 
+         
+      public void removeEmployee(Employee emp) 
+      { 
+          employeeList.remove(emp); 
+      }
+	
+	@Override
+	public void AddID(long id) {
+		System.out.println("The employee ID added is "+id);
+		
+	} 
+  } 
+  
+  
+  
+  interface EMP                                          //Proxy pattern
+  { 
+      public void connectTo(long id) throws Exception;
+
+	
+  } 
+  class validEMP implements EMP
+  { 
+      @Override
+      public void connectTo(long id) 
+      { 
+          System.out.println("Your are valid employee with Id: "+id+" so connecting to server"); 
+      } 
+      public void showEmployeeDetails()  
+      { 
+      } 
+  } 
+  class InvalidEMP implements EMP
+  { 
+      private EMP e = new validEMP(); 
+   
+      
+      public void connectTo(long id) throws Exception 
+      { 
+          if(!Developer.eml.contains(id)) 
+          { 
+              System.out.println("Access Denied!! not valid employee with id:"+id); 
+              return;
+          } 
+            
+          e.connectTo(id); 
+      }
+	
+
+    
+  } 
+public class design_patterns_structuralPatterns {
+
+	
+	public static void main(String[] args) {
+		
+		Developer dev1 = new Developer(100, "Lokesh Sharma", "Pro Developer"); 
+        Developer dev2 = new Developer(101, "Vinay Sharma", "Developer"); 
+        InvalidEMP validity = new InvalidEMP(); 
+        CompanyDirectory engDirectory = new CompanyDirectory(); 
+        engDirectory.addEmployee(dev1); 
+        engDirectory.addEmployee(dev2); 
+        
+        
+        Manager man1 = new Manager(200, "Kushagra Garg", "SEO Manager"); 
+        Manager man2 = new Manager(201, "Vikram Sharma ", "Kushagra's Manager"); 
+          
+        CompanyDirectory accDirectory = new CompanyDirectory(); 
+        accDirectory.addEmployee(man1); 
+        accDirectory.addEmployee(man2); 
+        
+        CompanyDirectory directory = new CompanyDirectory(); 
+        directory.addEmployee(engDirectory); 
+        directory.addEmployee(accDirectory); 
+        directory.showEmployeeDetails(); 
+        
+        
+       
+        try
+        { 
+            validity.connectTo(201); 
+            validity.connectTo(202); 
+        } 
+        catch (Exception e) 
+        { 
+            System.out.println(e.getMessage()); 
+        }
+        
+        
+	}
+
+}
